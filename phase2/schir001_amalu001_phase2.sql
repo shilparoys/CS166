@@ -4,25 +4,26 @@ DROP TABLE Message;
 
 DROP TABLE User_List;
 
-DROP TABLE User;
+DROP TABLE Users;
 
 
 
-CREATE TABLE User(
+
+CREATE TABLE Users(
    phoneNum CHAR(13) NOT NULL,
    login  CHAR(50),
    password CHAR(50) NOT NULL,
-   status CHAR(140).
+   status CHAR(140),
    UNIQUE(phoneNum, login),
    PRIMARY KEY(login)
 );
 
-
 CREATE TABLE User_List(
    list_type CHAR(10) NOT NULL,
-   FOREIGN KEY(login) REFERENCES User(login)
+   ulogin CHAR(50),
+   UNIQUE(ulogin),
+   FOREIGN KEY(ulogin) REFERENCES Users(login)
 );
-
 
 CREATE TABLE Message(
    id INT,
