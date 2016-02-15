@@ -1,3 +1,9 @@
+DROP TABLE MContains;
+
+DROP TABLE Initial_Sender;
+
+DROP TABLE Sender;
+
 DROP TABLE UContains;
 
 DROP TABLE Block;
@@ -83,5 +89,28 @@ CREATE TABLE UContains(
 	FOREIGN KEY(b_list_type) REFERENCES User_List(list_type)
 );
 
+CREATE TABLE Sender(
+	s_login CHAR(50) NOT NULL,
+	s_id INT,
+	UNIQUE(s_login),
+	PRIMARY KEY(s_login),
+	FOREIGN KEY(s_login) REFERENCES USERS(login),
+	FOREIGN KEY(s_id) REFERENCES Message(id)
+);
 
+CREATE TABLE Initial_Sender(
+	is_login CHAR(50) NOT NULL,
+	is_id INT,
+	UNIQUE(is_login),
+	PRIMARY KEY(is_login),
+	FOREIGN KEY(is_login) REFERENCES USERS(login),
+	FOREIGN KEY(is_id) REFERENCES Message(id)
+);
 
+CREATE TABLE MContains(
+	mc_mid INT,
+	mc_cid INT,
+	PRIMARY KEY(mc_mid),
+	FOREIGN KEY (mc_mid) REFERENCES Message(id),
+	FOREIGN KEY(mc_cid) REFERENCES Chat(id)
+);
