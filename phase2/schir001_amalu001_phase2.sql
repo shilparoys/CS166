@@ -20,7 +20,7 @@ CREATE TABLE User(
 
 CREATE TABLE User_List(
    list_type CHAR(10) NOT NULL,
-   FOREIGN KEY(login) REFERENCES USER(login)
+   FOREIGN KEY(login) REFERENCES User(login)
 );
 
 
