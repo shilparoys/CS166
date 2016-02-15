@@ -1,3 +1,7 @@
+DROP TABLE Contact;
+
+DROP TABLE Chat_List;
+
 DROP TABLE Chat;
 
 DROP TABLE Message;
@@ -5,8 +9,6 @@ DROP TABLE Message;
 DROP TABLE User_List;
 
 DROP TABLE Users;
-
-
 
 
 CREATE TABLE Users(
@@ -22,6 +24,7 @@ CREATE TABLE User_List(
    list_type CHAR(10) NOT NULL,
    ulogin CHAR(50),
    UNIQUE(ulogin),
+   PRIMARY KEY(list_type),
    FOREIGN KEY(ulogin) REFERENCES Users(login)
 );
 
@@ -41,3 +44,20 @@ CREATE TABLE Chat(
    PRIMARY KEY(id)
 );
 
+CREATE TABLE Chat_List(
+	cl_login CHAR(50) NOT NULL,
+	cl_id INT,
+	UNIQUE(cl_login),
+	PRIMARY KEY(cl_login),
+	FOREIGN KEY(cl_login) REFERENCES USERS(login),
+	FOREIGN KEY(cl_id) REFERENCES Chat(id)
+);
+
+CREATE TABLE Contact(
+	c_login CHAR(50) NOT NULL,
+	c_list_type CHAR(10) NOT NULL,
+	UNIQUE(c_login),
+	PRIMARY KEY(c_login),
+	FOREIGN KEY(c_login) REFERENCES USERS(login),
+	FOREIGN KEY(c_list_type) REFERENCES User_List(list_type)
+);
