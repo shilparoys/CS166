@@ -1,3 +1,7 @@
+DROP TABLE UContains;
+
+DROP TABLE Block;
+
 DROP TABLE Contact;
 
 DROP TABLE Chat_List;
@@ -61,3 +65,23 @@ CREATE TABLE Contact(
 	FOREIGN KEY(c_login) REFERENCES USERS(login),
 	FOREIGN KEY(c_list_type) REFERENCES User_List(list_type)
 );
+
+CREATE TABLE Block(
+	b_login CHAR(50) NOT NULL,
+	b_list_type CHAR(10) NOT NULL,
+	UNIQUE(b_login),
+	PRIMARY KEY(b_login),
+	FOREIGN KEY(b_login) REFERENCES USERS(login),
+	FOREIGN KEY(b_list_type) REFERENCES User_List(list_type)
+);
+
+CREATE TABLE UContains(
+	b_login CHAR(50),
+	b_list_type CHAR(10),
+	PRIMARY KEY(b_login),
+	FOREIGN KEY(b_login) REFERENCES USERS(login),
+	FOREIGN KEY(b_list_type) REFERENCES User_List(list_type)
+);
+
+
+
