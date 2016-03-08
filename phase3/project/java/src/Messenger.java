@@ -273,7 +273,7 @@ public class Messenger {
                 System.out.println(".........................");
                 System.out.println("9. Log out");
                 switch (readChoice()){
-                   case 1: AddToContact(esql); break;
+                   case 1: AddToContact(esql, authorizedUser); break;
                    case 2: ListContacts(esql); break;
                    case 3: NewMessage(esql); break;
                    case 9: usermenu = false; break;
@@ -375,18 +375,42 @@ public class Messenger {
       }
    }//end
 
-   public static void AddToContact(Messenger esql){
-      // Your code goes here.
-      // ...
-      // ...
+   //Monday 
+   public static void AddToContact(Messenger esql, String validUser){
+      try{
+         System.out.println("Enter user id to add: ");
+         String userId = in.readLine();
+
+         //check if user entered a a name
+         if(userId == ""){
+            System.out.println("Need to enter a user id");
+            return;
+        }
+        //need to make sure that given username is valid
+        String query = String.format("SELECT * FROM Usr WHERE login = '%s'", userId);
+        int userNum = esql.executeQuery(query);
+        if(userNum <= 0){
+            System.out.println("Given user id does not exisit in database");
+            return;
+        }
+
+        query = String.format("INSERT INTO user_list_contains(list_id, list_memeber) VALUES ('%s', '%s')"
+      }
+      catch(Exception e){
+         System.err.println(e.getMessage());
+         return null;
+      }      
+
    }//end
 
+   //Monday
    public static void ListContacts(Messenger esql){
       // Your code goes here.
       // ...
       // ...
    }//end
 
+   //Monday
    public static void NewMessage(Messenger esql){
       // Your code goes here.
       // ...
