@@ -273,7 +273,7 @@ public class Messenger {
                 System.out.println(".........................");
                 System.out.println("9. Log out");
                 switch (readChoice()){
-                   case 1: AddToContact(esql, authorizedUser); break;
+                   case 1: AddToContact(esql, authorisedUser); break;
                    case 2: ListContacts(esql); break;
                    case 3: NewMessage(esql); break;
                    case 9: usermenu = false; break;
@@ -393,12 +393,16 @@ public class Messenger {
             System.out.println("Given user id does not exisit in database");
             return;
         }
-
-        query = String.format("INSERT INTO user_list_contains(list_id, list_memeber) VALUES ('%s', '%s')"
+        
+        //insert userId to contact list
+        query = String.format("INSERT INTO user_list_contains (list_id, list_member) SELECT contact_list, '%s' FROM usr WHERE login = '%s'", userId, validUser);;
+        esql.executeQuery(query);
+        System.out.println("User is added successfully"); 
+        return;
       }
       catch(Exception e){
          System.err.println(e.getMessage());
-         return null;
+         return;
       }      
 
    }//end
