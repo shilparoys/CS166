@@ -273,10 +273,9 @@ public class Messenger {
                 System.out.println("4.  Add to blocked list");
                 System.out.println("5.  Delete from block list");
                 System.out.println("6.  Browse blocked list");
-                System.out.println("7.  Start new chat");
-                System.out.println("8.  Browse chats");
-                System.out.println("9.  Delete Own Account");
-                System.out.println("10. Log out");
+                System.out.println("7.  Chat Menu");
+                System.out.println("8.  Delete Own Account");
+                System.out.println("9. Log out");
                 switch (readChoice()){
                    case 1: AddToContact(esql, authorisedUser); break;
                    case 2: DeleteFromContact(esql, authorisedUser); break;
@@ -284,10 +283,9 @@ public class Messenger {
                    case 4: AddToBlocked(esql, authorisedUser); break;
                    case 5: DeleteFromBlocked(esql, authorisedUser); break;
                    case 6: ListBlocked(esql, authorisedUser); break;
-                   case 7: StartNewChat(esql, authorisedUser); break;
-                   case 8: ListChats(esql, authorisedUser); break;
-                   case 9: DeleteOwnAccount(esql, authorisedUser); break;
-                   case 10: usermenu = false; break;
+                   case 7: chatMenu(esql, authorisedUser); break;
+                   case 8: DeleteOwnAccount(esql, authorisedUser); break;
+                   case 9: usermenu = false; break;
                    default : System.out.println("Unrecognized choice!"); break;
                 }
               }
@@ -541,18 +539,45 @@ public class Messenger {
         }
    }//end Query6
 
-   public static void StartNewChat(Messenger esql, String authorizedUser){
-      // Your code goes here.
-      // ...
-      // ...
+   public static void chatMenu(Messenger esql, String authorizedUser){
+        boolean chatmenu = true;
+        while(chatmenu){
+            System.out.println("CHAT MENU");
+            System.out.println("---------");
+            System.out.println("1.  Create a chat");
+            System.out.println("2.  Chat viewer");
+            System.out.println("3.  Add member to chat");
+            System.out.println("4.  Remove member from chat");
+            System.out.println("5.  Delete a chat");
+            System.out.println("6. Log out");
+            switch (readChoice()){
+                case 1: createChat(esql, authorizedUser); break;
+                case 2: chatViewer(esql, authorizedUser); break;
+                case 3: addChatMember(esql, authorizedUser); break;
+                case 4: removeChatMember(esql, authorizedUser); break;
+                case 5: deleteChat(esql, authorizedUser); break;
+                case 6: chatmenu = false; break;
+                default : System.out.println("Unrecognized choice!"); break;
+            }
+        }
+        return;
    }//end 
 
+   public static void createChat(Messenger esql, String authorizedUser){
+   } 
 
-   public static void ListChats(Messenger esql, String authorizedUser){
-      // Your code goes here.
-      // ...
-      // ...
-   }//end Query6
+   public static void chatViewer(Messenger esql, String authorizedUser){
+   }
+
+   public static void addChatMember(Messenger esql, String authorizedUser){
+   }
+
+   public static void removeChatMember(Messenger esql, String authorizedUser){
+   }
+
+   public static void deleteChat(Messenger esql, String authorizedUser){
+   }
+
 
    public static void DeleteOwnAccount(Messenger esql, String authorizedUser){
       //code
