@@ -703,8 +703,71 @@ public class Messenger {
             
    }
 
+   public static void addMessage(Messenger esql, String authorizedUser, String chatId){
 
-   public static void DeleteOwnAccount(Messenger esql, String authorizedUser){
+        try{
+            System.out.println("Enter a message");
+            String message = in.readLine();
+            
+            if(message == ""){
+                System.out.println("enter a message");
+                return;       
+            }
+
+            String query = String.format("INSERT INTO MESSAGE(msg_text, msg_timestamp, sender_login, chat_id) VALUES('%s', NOW(), '%s', '%s')", message, authorizedUser, chatId);
+            esql.executeUpdate(query);
+            System.out.println("Message is added");
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+    }
+    public static void deleteMessage(Messenger esql, String authorizedUser, String chatId){
+
+        try{
+            System.out.println("Enter messageId");
+            String messageId = in.readLine();
+            
+            if(messageId == ""){
+                System.out.println("enter a message id ");
+                return;       
+            }
+
+            String query = String.format("DELETE FROM MESSAGE WHERE msg_id = '%s'", messageId);
+            esql.executeUpdate(query);
+            System.out.println("Message is deleted");
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+    }
+    public static void editMessage(Messenger esql, String authorizedUser, String chatId){
+
+        try{
+            System.out.println("Enter messageId");
+            String messageId = in.readLine();
+            
+            if(messageId == ""){
+                System.out.println("enter a message");
+                return;       
+            }
+
+            System.out.println("Enter message");
+            String message = in.readLine();
+            if(message == ""){
+                System.out.println("enter message");
+                return;
+            }
+
+            String query = String.format("UPDATE MESSAGE SET msg_text = '%s' WHERE msg_id = '%s'", message, messageId);
+            esql.executeUpdate(query);
+            System.out.println("Message is edited");
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+    }
+    public static void DeleteOwnAccount(Messenger esql, String authorizedUser){
       //code
    }
 
