@@ -265,18 +265,29 @@ public class Messenger {
             if (authorisedUser != null) {
               boolean usermenu = true;
               while(usermenu) {
-                System.out.println("MAIN MENU");
+                System.out.println("USER MENU");
                 System.out.println("---------");
-                System.out.println("1. Add to contact list");
-                System.out.println("2. Browse contact list");
-                System.out.println("3. Write a new message");
-                System.out.println(".........................");
-                System.out.println("9. Log out");
+                System.out.println("1.  Add to contact list");
+                System.out.println("2.  Delete from  contact list");
+                System.out.println("3.  Browse contact list");
+                System.out.println("4.  Add to blocked list");
+                System.out.println("5.  Delete from contact list");
+                System.out.println("6.  Browse blocked list");
+                System.out.println("7.  Start new chat");
+                System.out.println("8.  Browse chats");
+                System.out.println("9.  Delete Own Account");
+                System.out.println("10. Log out");
                 switch (readChoice()){
                    case 1: AddToContact(esql, authorisedUser); break;
-                   case 2: ListContacts(esql, authorisedUser); break;
-                   case 3: NewMessage(esql); break;
-                   case 9: usermenu = false; break;
+                   case 2: DeleteFromContact(esql, authorisedUser); break;
+                   case 3: ListContacts(esql, authorisedUser); break;
+                   case 4: AddToBlocked(esql, authorisedUser); break;
+                   case 5: DeleteFromBlocked(esql, authorisedUser); break;
+                   case 6: ListBlocked(esql, authorisedUser); break;
+                   case 7: StartNewChat(esql, authorisedUser); break;
+                   case 8: ListChats(esql, authorisedUser); break;
+                   case 9: DeleteOwnAccount(esql, authorisedUser); break;
+                   case 10: usermenu = false; break;
                    default : System.out.println("Unrecognized choice!"); break;
                 }
               }
@@ -426,17 +437,75 @@ public class Messenger {
         }
    }//end
 
-   public static void NewMessage(Messenger esql){
+   public static void DeleteFromContact(Messenger esql, String authroizedUser){
       // Your code goes here.
       // ...
       // ...
    }//end 
 
 
-   public static void Query6(Messenger esql){
+   public static void AddToBlocked(Messenger esql, String authroizedUser){
       // Your code goes here.
       // ...
       // ...
    }//end Query6
+
+
+   public static void DeleteFromBlocked(Messenger esql, String authorizedUser){
+      // Your code goes here.
+      // ...
+      // ...
+   }//end 
+
+
+   public static void ListBlocked(Messenger esql, String authroizedUser){
+      // Your code goes here.
+      // ...
+      // ...
+   }//end Query6
+
+   public static void StartNewChat(Messenger esql, String authorizedUser){
+      // Your code goes here.
+      // ...
+      // ...
+   }//end 
+
+
+   public static void ListChats(Messenger esql, String authorizedUser){
+      // Your code goes here.
+      // ...
+      // ...
+   }//end Query6
+
+   public static void DeleteOwnAccount(Messenger esql, String authorizedUser){
+      //code
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }//end Messenger
