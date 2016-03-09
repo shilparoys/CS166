@@ -274,7 +274,7 @@ public class Messenger {
                 System.out.println("9. Log out");
                 switch (readChoice()){
                    case 1: AddToContact(esql, authorisedUser); break;
-                   case 2: ListContacts(esql); break;
+                   case 2: ListContacts(esql, authorisedUser); break;
                    case 3: NewMessage(esql); break;
                    case 9: usermenu = false; break;
                    default : System.out.println("Unrecognized choice!"); break;
@@ -380,6 +380,7 @@ public class Messenger {
             //ask user to give contact username
             System.out.println("Enter userId to add to contact list");
             String contactUserId = in.readLine();
+
             //error check on username - is it blank and is it in database
             if(contactUserId == ""){
                 System.out.println("Cannot enter blank user id");
@@ -391,12 +392,17 @@ public class Messenger {
                 System.out.println("Given user id does not exist");
                 return;
             }
+
             query = String.format("SELECT contact_list FROM USR WHERE login = '%s'", authorizedUser);
             List<List<String>> result = esql.executeQueryAndReturnResult(query);
             String index = result.get(0).get(0);
             query = String.format("INSERT INTO USER_LIST_CONTAINS(list_id, list_member) VALUES ('%s', '%s')", index, contactUserId);
             esql.executeUpdate(query);
-            String print = contactUserId + " is in the contact list";
+            for(int i = 0; i < result.size(); i++){
+                System.out.println("in here");
+                System.out.println(result.get(i).get(0));
+            }
+             String print = contactUserId + " is in the contact list";
             System.out.println(print);
         }
         catch(Exception e){
@@ -405,10 +411,19 @@ public class Messenger {
         }   
    }//end
 
-   public static void ListContacts(Messenger esql){
-      // Your code goes here.
-      // ...
-      // ...
+   public static void ListContacts(Messenger esql, String authorizedUser){
+        try{
+            String query = String.format("SELECT a.list_member FROM USER_LIST_CONTAINS a, USR b WHERE b.login = '%s' AND b.contact_list = a.list_id", authorizedUser);
+            List<List<String>> result = esql.executeQueryAndReturnResult(query);
+            for(int i = 0; i < result.size(); i++){
+                System.out.println(result.get(i).get(0));
+            }
+            return;
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+            return;
+        }
    }//end
 
    public static void NewMessage(Messenger esql){
