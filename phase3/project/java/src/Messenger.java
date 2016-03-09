@@ -555,7 +555,7 @@ public class Messenger {
                 case 2: chatViewer(esql, authorizedUser); break;
                 case 3: addChatMember(esql, authorizedUser, "5"); break;
                 case 4: removeChatMember(esql, authorizedUser, "5"); break;
-                case 5: deleteChat(esql, authorizedUser); break;
+                case 5: deleteChat(esql, authorizedUser, "5"); break;
                 case 6: chatmenu = false; break;
                 default : System.out.println("Unrecognized choice!"); break;
             }
@@ -679,7 +679,28 @@ public class Messenger {
         }
  }
 
-   public static void deleteChat(Messenger esql, String authorizedUser){
+   public static void deleteChat(Messenger esql, String authorizedUser, String chatId){
+        try{   
+             //checking if it is initial sender
+            String query = String.format("SELECT * FROM CHAT WHERE init_sender = '%s' AND chat_id = '%s'", authorizedUser, chatId);
+            int userNum = esql.executeQuery(query);
+            if(userNum <= 0){
+                System.out.println("Not initial sender");
+                return;
+            }
+            
+            query = String.format("DELETE FROM MESSAGES WHERE chat_id = '%s'", chatId);
+            esql.executeUpdate(query);
+            query = String.format("DELETE FROM CHAT_LIST WHERE chat_id = '%s'", chatId);
+            esql.executeUpdate(query);
+            query = String.format("DELETE FROM CHAT WHERE chat_id = '%s'", chatId);
+            esql.executeUpdate(query);
+            System.out.println("Chat deleted");
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+            
    }
 
 
