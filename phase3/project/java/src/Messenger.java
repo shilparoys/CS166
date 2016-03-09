@@ -554,7 +554,7 @@ public class Messenger {
                 case 1: createChat(esql, authorizedUser); break;
                 case 2: chatViewer(esql, authorizedUser); break;
                 case 3: addChatMember(esql, authorizedUser, "5"); break;
-                case 4: removeChatMember(esql, authorizedUser); break;
+                case 4: removeChatMember(esql, authorizedUser, "5"); break;
                 case 5: deleteChat(esql, authorizedUser); break;
                 case 6: chatmenu = false; break;
                 default : System.out.println("Unrecognized choice!"); break;
@@ -636,7 +636,7 @@ public class Messenger {
                 System.out.println("Given user id does not exisit");
                 return;
             }
-            query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, authorizedUser);
+            query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, chatName);
             esql.executeUpdate(query);
             String print = chatName + " is added to the chat";
             System.out.println(print);
@@ -646,8 +646,38 @@ public class Messenger {
         }
    }
 
-   public static void removeChatMember(Messenger esql, String authorizedUser){
-   }
+   public static void removeChatMember(Messenger esql, String authorizedUser, String chatId){
+           try{
+             System.out.println("Enter user name to remove from chat");
+            String chatName = in.readLine();
+             if(chatName == ""){
+                System.out.println("Cannot enter blank user id");
+                return;
+            }
+
+            //checking if it is initial sender
+            String query = String.format("SELECT * FROM CHAT WHERE init_sender = '%s' AND chat_id = '%s'", authorizedUser, chatId);
+            int userNum = esql.executeQuery(query);
+            if(userNum <= 0){
+                System.out.println("Not initial sender");
+                return;
+            }
+
+            query = String.format("SELECT * FROM USR WHERE login = '%s'", chatName);
+            userNum = esql.executeQuery(query);
+            if(userNum <= 0){
+                System.out.println("Given user id does not exisit");
+                return;
+            }
+            query = String.format("DELETE FROM CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, chatName);
+            esql.executeUpdate(query);
+            String print = chatName + " is removed from the chat";
+            System.out.println(print);
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+ }
 
    public static void deleteChat(Messenger esql, String authorizedUser){
    }
