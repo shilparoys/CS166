@@ -409,11 +409,7 @@ public class Messenger {
             String index = result.get(0).get(0);
             query = String.format("INSERT INTO USER_LIST_CONTAINS(list_id, list_member) VALUES ('%s', '%s')", index, contactUserId);
             esql.executeUpdate(query);
-            for(int i = 0; i < result.size(); i++){
-                System.out.println("in here");
-                System.out.println(result.get(i).get(0));
-            }
-             String print = contactUserId + " is in the contact list";
+            String print = contactUserId + " is in the contact list";
             System.out.println(print);
         }
         catch(Exception e){
@@ -437,31 +433,112 @@ public class Messenger {
         }
    }//end
 
-   public static void DeleteFromContact(Messenger esql, String authroizedUser){
-      // Your code goes here.
-      // ...
-      // ...
+   public static void DeleteFromContact(Messenger esql, String authorizedUser){
+        try{
+            System.out.println("Enter userId to remove from contact list");
+            String contactUserId = in.readLine();
+
+            if(contactUserId == ""){
+                System.out.println("Cannot enter blank user id");
+                return;
+            }
+
+            String query = String.format("SELECT * FROM USR WHERE login = '%s'", contactUserId);
+            int userNum = esql.executeQuery(query);
+            if(userNum <= 0){
+                System.out.println("Given user id does not exisit");
+                return;
+            }
+
+            query = String.format("SELECT contact_list FROM USR WHERE login = '%s'", authorizedUser);
+            List<List<String>> result = esql.executeQueryAndReturnResult(query);
+            String index = result.get(0).get(0);
+            query = String.format("DELETE FROM USER_LIST_CONTAINS WHERE list_id = '%s' AND list_member ='%s'", index, contactUserId);
+            esql.executeUpdate(query);
+            String print = contactUserId + " is removed from contact list";
+            System.out.println(print);
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
    }//end 
 
 
-   public static void AddToBlocked(Messenger esql, String authroizedUser){
-      // Your code goes here.
-      // ...
-      // ...
+   public static void AddToBlocked(Messenger esql, String authorizedUser){
+        try{
+            System.out.println("Enter userId to add to blocked list");
+            String blockUserId = in.readLine();
+
+            if(blockUserId == ""){
+                System.out.println("Cannot enter blank user id");
+                return;
+            }
+
+            String query = String.format("SELECT * FROM USR WHERE login = '%s'", blockUserId);
+            int userNum = esql.executeQuery(query);
+            if(userNum <= 0){
+                System.out.println("Given user id does not exist");
+                return;
+            }
+            query = String.format("SELECT block_list FROM USR WHERE login = '%s'", authorizedUser);
+            List<List<String>> result = esql.executeQueryAndReturnResult(query);
+            String index = result.get(0).get(0);
+            query = String.format("INSERT INTO USER_LIST_CONTAINS(list_id, list_member) VALUES ('%s', '%s')", index, blockUserId);
+            esql.executeUpdate(query);
+            String print = blockUserId + " is in the block list";
+            System.out.println(print);
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+        
    }//end Query6
 
 
    public static void DeleteFromBlocked(Messenger esql, String authorizedUser){
-      // Your code goes here.
-      // ...
-      // ...
+        try{
+            System.out.println("Enter userId to remove from blocked list");
+            String blockUserId = in.readLine();
+
+            if(blockUserId == ""){
+                System.out.println("Cannot enter blank user id");
+                return;
+            }
+
+            String query = String.format("SELECT * FROM USR WHERE login = '%s'", blockUserId);
+            int userNum = esql.executeQuery(query);
+            if(userNum <= 0){
+                System.out.println("Given user id does not exisit");
+                return;
+            }
+
+            query = String.format("SELECT block_list FROM USR WHERE login = '%s'", authorizedUser);
+            List<List<String>> result = esql.executeQueryAndReturnResult(query);
+            String index = result.get(0).get(0);
+            query = String.format("DELETE FROM USER_LIST_CONTAINS WHERE list_id = '%s' AND list_member ='%s'", index, blockUserId);
+            esql.executeUpdate(query);
+            String print = blockUserId + " is removed from block list";
+            System.out.println(print);
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
    }//end 
 
 
-   public static void ListBlocked(Messenger esql, String authroizedUser){
-      // Your code goes here.
-      // ...
-      // ...
+   public static void ListBlocked(Messenger esql, String authorizedUser){
+     try{
+            String query = String.format("SELECT a.list_member FROM USER_LIST_CONTAINS a, USR b WHERE b.login = '%s' AND b.block_list = a.list_id", authorizedUser);
+            List<List<String>> result = esql.executeQueryAndReturnResult(query);
+            for(int i = 0; i < result.size(); i++){
+                System.out.println(result.get(i).get(0));
+            }
+            return;
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+            return;
+        }
    }//end Query6
 
    public static void StartNewChat(Messenger esql, String authorizedUser){
