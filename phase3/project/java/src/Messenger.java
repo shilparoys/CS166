@@ -268,10 +268,10 @@ public class Messenger {
                 System.out.println("USER MENU");
                 System.out.println("---------");
                 System.out.println("1.  Add to contact list");
-                System.out.println("2.  Delete from  contact list");
+                System.out.println("2.  Delete from contact list");
                 System.out.println("3.  Browse contact list");
                 System.out.println("4.  Add to blocked list");
-                System.out.println("5.  Delete from contact list");
+                System.out.println("5.  Delete from block list");
                 System.out.println("6.  Browse blocked list");
                 System.out.println("7.  Start new chat");
                 System.out.println("8.  Browse chats");
