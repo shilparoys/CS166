@@ -564,6 +564,48 @@ public class Messenger {
    }//end 
 
    public static void createChat(Messenger esql, String authorizedUser){
+        try{
+            System.out.println("Please add usernames to include in chat");
+            System.out.println("End with a q");
+            String type;
+            List<String> chatUsers = new ArrayList<String>();
+            String input = in.readLine();
+            while (!input.equals("q")){
+                chatUsers.add(input);
+                input = in.readLine();
+            }
+            if(chatUsers.size() == 0){
+                System.out.println("Need to enter a user name");
+                return;
+            }
+            else if(chatUsers.size() == 1){
+                type = "private";
+            }
+            else{
+                type = "group";
+            }
+            //int chatId = esql.getCurrSeqVal("chat_chat_id_seq");
+            String query  = "SELECT MAX(chat_id) FROM CHAT";
+            List<List<String>> result = esql.executeQueryAndReturnResult(query);
+            String chatId = result.get(0).get(0);
+            query = String.format("INSERT INTO CHAT(chat_type, init_sender) VALUES('%s', '%s')", type, authorizedUser);
+            esql.executeUpdate(query);
+
+            query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, authorizedUser);
+            esql.executeUpdate(query);
+
+            for(int i = 0; i < chatUsers.size(); i++){
+                query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, authorizedUser);
+            }
+            String print = "New chat has been created with " + authorizedUser + " ";
+            for(int i = 0; i < chatUsers.size(); i++){
+                print += chatUsers.get(i) + " " ;
+            }
+            System.out.println(print);
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
    } 
 
    public static void chatViewer(Messenger esql, String authorizedUser){
