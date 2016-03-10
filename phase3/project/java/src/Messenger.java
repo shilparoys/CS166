@@ -267,24 +267,16 @@ public class Messenger {
               while(usermenu) {
                 System.out.println("USER MENU");
                 System.out.println("---------");
-                System.out.println("1.  Add to contact list");
-                System.out.println("2.  Delete from contact list");
-                System.out.println("3.  Browse contact list");
-                System.out.println("4.  Add to blocked list");
-                System.out.println("5.  Delete from block list");
-                System.out.println("6.  Browse blocked list");
-                System.out.println("7.  Chat Menu");
-                System.out.println("8.  Delete Own Account");
+		System.out.println("1.  Contact List Menu");
+		System.out.println("2.  Blocked List Menu");
+                System.out.println("3.  Chat Menu");
+                System.out.println("4.  Delete Own Account");
                 System.out.println("9. Log out");
                 switch (readChoice()){
-                   case 1: AddToContact(esql, authorisedUser); break;
-                   case 2: DeleteFromContact(esql, authorisedUser); break;
-                   case 3: ListContacts(esql, authorisedUser); break;
-                   case 4: AddToBlocked(esql, authorisedUser); break;
-                   case 5: DeleteFromBlocked(esql, authorisedUser); break;
-                   case 6: ListBlocked(esql, authorisedUser); break;
-                   case 7: chatMenu(esql, authorisedUser); break;
-                   case 8: DeleteOwnAccount(esql, authorisedUser); break;
+                   case 1: contactListMenu(esql, authorisedUser); break;
+		   case 2: blockListMenu(esql, authorisedUser); break;
+                   case 3: chatMenu(esql, authorisedUser); break;
+                   case 4: DeleteOwnAccount(esql, authorisedUser); break;
                    case 9: usermenu = false; break;
                    default : System.out.println("Unrecognized choice!"); break;
                 }
@@ -384,6 +376,45 @@ public class Messenger {
       }
    }//end
 
+   public static void blockListMenu(Messenger esql, String authorizedUser){
+       boolean blockMenu = true;
+       while(blockMenu){
+	   System.out.println("BLOCK LIST MENU");
+	   System.out.println("---------");
+	   System.out.println("1.  Add to blocked list");
+	   System.out.println("2.  Delete from block list");
+	   System.out.println("3.  Browse blocked list");
+	   System.out.println("4.  Log out");
+	   switch(readChoice()){
+	       case 1: AddToBlocked(esql, authorizedUser); break;
+	       case 2: DeleteFromBlocked(esql, authorizedUser); break;
+	       case 3: ListBlocked(esql, authorizedUser); break;
+	       case 4: blockMenu = false; break;
+	       default: System.out.println("Unrecognized choice!"); break;
+	   }
+	   
+       }
+   }
+   public static void contactListMenu(Messenger esql, String authorizedUser){
+       boolean contactMenu = true;
+       while(contactMenu){
+	   System.out.println("CONTACT LIST MENU");
+	   System.out.println("---------");
+	   System.out.println("1.  Add to contact list");
+	   System.out.println("2.  Delete from contact list");
+	   System.out.println("3.  Browse contact list");
+	   System.out.println("4.  Log out");
+	   switch(readChoice()){
+	       case 1: AddToContact(esql, authorizedUser); break;
+	       case 2: DeleteFromContact(esql, authorizedUser); break;
+	       case 3: ListContacts(esql, authorizedUser); break;
+	       case 4: contactMenu = false; break;
+	       default: System.out.println("Unrecognized choice!"); break;
+	   }
+	   
+       }
+       
+    }
    public static void AddToContact(Messenger esql, String authorizedUser){
         try{
             //ask user to give contact username
