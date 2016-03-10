@@ -615,6 +615,22 @@ public class Messenger {
         return;
    }//end 
 
+   public static boolean isValidSender(Messenger esql, String authorizedUser, String chatId){
+	try{
+	    String query = String.format("SELECT * FROM CHAT WHERE init_sender = '%s' AND chat_id = '%s'", authorizedUser, chatId);
+            int userNum = esql.executeQuery(query);
+            if(userNum <= 0){
+                System.out.println("Not initial sender");
+                return true;
+            }
+	    return false;
+	}
+	catch(Exception e){
+	    System.err.println(e.getMessage());
+	    return false;
+	}
+   }
+   
    public static void createChat(Messenger esql, String authorizedUser){
         try{
             System.out.println("Please add usernames to include in chat");
@@ -672,18 +688,13 @@ public class Messenger {
 	    
             if(isBlankEntry(chatName))
 		return;
-            //checking if it is initial sender
-            String query = String.format("SELECT * FROM CHAT WHERE init_sender = '%s' AND chat_id = '%s'", authorizedUser, chatId);
-            int userNum = esql.executeQuery(query);
-            if(userNum <= 0){
-                System.out.println("Not initial sender");
-                return;
-            }
+            if(isValidSender(esql, authorizedUser, chatId))
+		return;
 
 	    if(isValidEntry(esql, chatName))
 		return;
             
-            query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, chatName);
+            String query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, chatName);
             esql.executeUpdate(query);
             String print = chatName + " is added to the chat";
             System.out.println(print);
@@ -700,17 +711,12 @@ public class Messenger {
              if(isBlankEntry(chatName))
 		return;
 
-            //checking if it is initial sender
-            String query = String.format("SELECT * FROM CHAT WHERE init_sender = '%s' AND chat_id = '%s'", authorizedUser, chatId);
-            int userNum = esql.executeQuery(query);
-            if(userNum <= 0){
-                System.out.println("Not initial sender");
-                return;
-            }
+            if(isValidSender(esql, authorizedUser, chatId))
+		return;
 
             if(isValidEntry(esql, chatName))
 		return;
-            query = String.format("DELETE FROM CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, chatName);
+            String query = String.format("DELETE FROM CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, chatName);
             esql.executeUpdate(query);
             String print = chatName + " is removed from the chat";
             System.out.println(print);
@@ -723,14 +729,10 @@ public class Messenger {
    public static void deleteChat(Messenger esql, String authorizedUser, String chatId){
         try{   
              //checking if it is initial sender
-            String query = String.format("SELECT * FROM CHAT WHERE init_sender = '%s' AND chat_id = '%s'", authorizedUser, chatId);
-            int userNum = esql.executeQuery(query);
-            if(userNum <= 0){
-                System.out.println("Not initial sender");
-                return;
-            }
+            if(isValidSender(esql, authorizedUser, chatId))
+		return;
             
-            query = String.format("DELETE FROM MESSAGES WHERE chat_id = '%s'", chatId);
+            String query = String.format("DELETE FROM MESSAGES WHERE chat_id = '%s'", chatId);
             esql.executeUpdate(query);
             query = String.format("DELETE FROM CHAT_LIST WHERE chat_id = '%s'", chatId);
             esql.executeUpdate(query);
