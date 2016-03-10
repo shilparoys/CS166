@@ -653,18 +653,16 @@ public class Messenger {
             String query = String.format("INSERT INTO CHAT(chat_type, init_sender) VALUES('%s', '%s')", type, authorizedUser);
             esql.executeUpdate(query);
 
-            query = "SELECT MAX(chat_id) FROM CHAT";
-            List<List<String>> result = esql.executeQueryAndReturnResult(query);
-            String chatId = result.get(0).get(0);
+            int chatId = esql.getCurrSeqVal("chat_chat_id_seq");
 
             //adding everyone else into the chat
             for(int i = 0; i < chatUsers.size(); i++){
-                query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, chatUsers.get(i));
+                query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%d', '%s')", chatId, chatUsers.get(i));
                 esql.executeUpdate(query);
             }
 
             //adding authorized user to chat
-            query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, authorizedUser);
+            query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%d', '%s')", chatId, authorizedUser);
             esql.executeUpdate(query);
 
             String print = "New chat has been created with " + authorizedUser + " ";
