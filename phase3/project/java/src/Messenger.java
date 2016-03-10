@@ -587,6 +587,7 @@ public class Messenger {
 	    }
        }
    }
+  
    public static void chatMenu(Messenger esql, String authorizedUser){
         boolean chatmenu = true;
         while(chatmenu){
@@ -632,18 +633,18 @@ public class Messenger {
             else{
                 type = "group";
             }
-            //int chatId = esql.getCurrSeqVal("chat_chat_id_seq");
-            String query  = "SELECT MAX(chat_id) FROM CHAT";
-            List<List<String>> result = esql.executeQueryAndReturnResult(query);
-            String chatId = result.get(0).get(0);
-            query = String.format("INSERT INTO CHAT(chat_type, init_sender) VALUES('%s', '%s')", type, authorizedUser);
+            int chatId = esql.getCurrSeqVal("chat_chat_id_seq");
+            //String query  = "SELECT MAX(chat_id) FROM CHAT";
+            //List<List<String>> result = esql.executeQueryAndReturnResult(query);
+            //String chatId = result.get(0).get(0);
+            String query = String.format("INSERT INTO CHAT(chat_type, init_sender) VALUES('%s', '%s')", type, authorizedUser);
             esql.executeUpdate(query);
 
-            query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, authorizedUser);
+            query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%d', '%s')", chatId, authorizedUser);
             esql.executeUpdate(query);
 
             for(int i = 0; i < chatUsers.size(); i++){
-                query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, authorizedUser);
+                query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%d', '%s')", chatId, authorizedUser);
                 esql.executeUpdate(query);
             }
             String print = "New chat has been created with " + authorizedUser + " ";
