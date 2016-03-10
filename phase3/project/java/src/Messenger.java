@@ -425,6 +425,23 @@ public class Messenger {
        return false;
       
    }
+   
+   public static boolean isValidEntry(Messenger esql, String variable){
+         try{
+            String query = String.format("SELECT * FROM USR WHERE login = '%s'", variable);
+            int userNum = esql.executeQuery(query);
+            if(userNum <= 0){
+                System.out.println("Given user id does not exist");
+                return true;
+            }
+            return false;
+          }
+          catch(Exception e){
+                System.err.println(e.getMessage());
+                return false;
+         }
+
+   }
    public static void AddToContact(Messenger esql, String authorizedUser){
         try{
             //ask user to give contact username
@@ -433,15 +450,12 @@ public class Messenger {
 	    
 	    if(isBlankEntry(contactUserId))
 		return;
+        
+	    if(isValidEntry(esql, contactUserId))
+		return; 
 	    
-            String query = String.format("SELECT * FROM USR WHERE login = '%s'", contactUserId);
-            int userNum = esql.executeQuery(query);
-            if(userNum <= 0){
-                System.out.println("Given user id does not exist");
-                return;
-            }
 
-            query = String.format("SELECT contact_list FROM USR WHERE login = '%s'", authorizedUser);
+            String query = String.format("SELECT contact_list FROM USR WHERE login = '%s'", authorizedUser);
             List<List<String>> result = esql.executeQueryAndReturnResult(query);
             String index = result.get(0).get(0);
             query = String.format("INSERT INTO USER_LIST_CONTAINS(list_id, list_member) VALUES ('%s', '%s')", index, contactUserId);
@@ -478,14 +492,10 @@ public class Messenger {
 	    if(isBlankEntry(contactUserId))
 		return;
 		
-            String query = String.format("SELECT * FROM USR WHERE login = '%s'", contactUserId);
-            int userNum = esql.executeQuery(query);
-            if(userNum <= 0){
-                System.out.println("Given user id does not exisit");
-                return;
-            }
-
-            query = String.format("SELECT contact_list FROM USR WHERE login = '%s'", authorizedUser);
+	    if(isValidEntry(esql, contactUserId))
+		return;
+		
+            String query = String.format("SELECT contact_list FROM USR WHERE login = '%s'", authorizedUser);
             List<List<String>> result = esql.executeQueryAndReturnResult(query);
             String index = result.get(0).get(0);
             query = String.format("DELETE FROM USER_LIST_CONTAINS WHERE list_id = '%s' AND list_member ='%s'", index, contactUserId);
@@ -506,13 +516,10 @@ public class Messenger {
             if(isBlankEntry(blockUserId))
 		return;
 
-            String query = String.format("SELECT * FROM USR WHERE login = '%s'", blockUserId);
-            int userNum = esql.executeQuery(query);
-            if(userNum <= 0){
-                System.out.println("Given user id does not exist");
-                return;
-            }
-            query = String.format("SELECT block_list FROM USR WHERE login = '%s'", authorizedUser);
+	    if(isValidEntry(esql, blockUserId))
+		return;
+		
+            String query = String.format("SELECT block_list FROM USR WHERE login = '%s'", authorizedUser);
             List<List<String>> result = esql.executeQueryAndReturnResult(query);
             String index = result.get(0).get(0);
             query = String.format("INSERT INTO USER_LIST_CONTAINS(list_id, list_member) VALUES ('%s', '%s')", index, blockUserId);
@@ -534,14 +541,10 @@ public class Messenger {
             if(isBlankEntry(blockUserId))
 		return;
 
-            String query = String.format("SELECT * FROM USR WHERE login = '%s'", blockUserId);
-            int userNum = esql.executeQuery(query);
-            if(userNum <= 0){
-                System.out.println("Given user id does not exisit");
-                return;
-            }
+            if(isValidEntry(esql, blockUserId))
+		return;
 
-            query = String.format("SELECT block_list FROM USR WHERE login = '%s'", authorizedUser);
+            String query = String.format("SELECT block_list FROM USR WHERE login = '%s'", authorizedUser);
             List<List<String>> result = esql.executeQueryAndReturnResult(query);
             String index = result.get(0).get(0);
             query = String.format("DELETE FROM USER_LIST_CONTAINS WHERE list_id = '%s' AND list_member ='%s'", index, blockUserId);
@@ -633,18 +636,18 @@ public class Messenger {
             else{
                 type = "group";
             }
-            int chatId = esql.getCurrSeqVal("chat_chat_id_seq");
-            //String query  = "SELECT MAX(chat_id) FROM CHAT";
-            //List<List<String>> result = esql.executeQueryAndReturnResult(query);
-            //String chatId = result.get(0).get(0);
-            String query = String.format("INSERT INTO CHAT(chat_type, init_sender) VALUES('%s', '%s')", type, authorizedUser);
+            //int chatId = esql.getCurrSeqVal("chat_chat_id_seq");
+            String query  = "SELECT MAX(chat_id) FROM CHAT";
+            List<List<String>> result = esql.executeQueryAndReturnResult(query);
+            String chatId = result.get(0).get(0);
+            query = String.format("INSERT INTO CHAT(chat_type, init_sender) VALUES('%s', '%s')", type, authorizedUser);
             esql.executeUpdate(query);
 
-            query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%d', '%s')", chatId, authorizedUser);
+            query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, authorizedUser);
             esql.executeUpdate(query);
 
             for(int i = 0; i < chatUsers.size(); i++){
-                query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%d', '%s')", chatId, authorizedUser);
+                query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, authorizedUser);
                 esql.executeUpdate(query);
             }
             String print = "New chat has been created with " + authorizedUser + " ";
@@ -677,12 +680,9 @@ public class Messenger {
                 return;
             }
 
-            query = String.format("SELECT * FROM USR WHERE login = '%s'", chatName);
-            userNum = esql.executeQuery(query);
-            if(userNum <= 0){
-                System.out.println("Given user id does not exisit");
-                return;
-            }
+	    if(isValidEntry(esql, chatName))
+		return;
+            
             query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, chatName);
             esql.executeUpdate(query);
             String print = chatName + " is added to the chat";
@@ -708,12 +708,8 @@ public class Messenger {
                 return;
             }
 
-            query = String.format("SELECT * FROM USR WHERE login = '%s'", chatName);
-            userNum = esql.executeQuery(query);
-            if(userNum <= 0){
-                System.out.println("Given user id does not exisit");
-                return;
-            }
+            if(isValidEntry(esql, chatName))
+		return;
             query = String.format("DELETE FROM CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, chatName);
             esql.executeUpdate(query);
             String print = chatName + " is removed from the chat";
