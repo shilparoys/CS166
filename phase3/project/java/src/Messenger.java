@@ -417,17 +417,23 @@ public class Messenger {
        
     }
    
+   public static boolean isBlankEntry(String variable){
+       if(variable.isEmpty()){
+	   System.out.println("Must enter something");
+	   return true;
+       }
+       return false;
+      
+   }
    public static void AddToContact(Messenger esql, String authorizedUser){
         try{
             //ask user to give contact username
             System.out.println("Enter userId to add to contact list");
             String contactUserId = in.readLine();
-
-            //error check on username - is it blank and is it in database
-            if(contactUserId == ""){
-                System.out.println("Cannot enter blank user id");
-                return;
-            }
+	    
+	    if(isBlankEntry(contactUserId))
+		return;
+	    
             String query = String.format("SELECT * FROM USR WHERE login = '%s'", contactUserId);
             int userNum = esql.executeQuery(query);
             if(userNum <= 0){
@@ -469,11 +475,9 @@ public class Messenger {
             System.out.println("Enter userId to remove from contact list");
             String contactUserId = in.readLine();
 
-            if(contactUserId == ""){
-                System.out.println("Cannot enter blank user id");
-                return;
-            }
-
+	    if(isBlankEntry(contactUserId))
+		return;
+		
             String query = String.format("SELECT * FROM USR WHERE login = '%s'", contactUserId);
             int userNum = esql.executeQuery(query);
             if(userNum <= 0){
@@ -499,10 +503,8 @@ public class Messenger {
             System.out.println("Enter userId to add to blocked list");
             String blockUserId = in.readLine();
 
-            if(blockUserId == ""){
-                System.out.println("Cannot enter blank user id");
-                return;
-            }
+            if(isBlankEntry(blockUserId))
+		return;
 
             String query = String.format("SELECT * FROM USR WHERE login = '%s'", blockUserId);
             int userNum = esql.executeQuery(query);
@@ -529,10 +531,8 @@ public class Messenger {
             System.out.println("Enter userId to remove from blocked list");
             String blockUserId = in.readLine();
 
-            if(blockUserId == ""){
-                System.out.println("Cannot enter blank user id");
-                return;
-            }
+            if(isBlankEntry(blockUserId))
+		return;
 
             String query = String.format("SELECT * FROM USR WHERE login = '%s'", blockUserId);
             int userNum = esql.executeQuery(query);
@@ -666,11 +666,9 @@ public class Messenger {
         try{
              System.out.println("Enter user name to add to chat");
             String chatName = in.readLine();
-             if(chatName == ""){
-                System.out.println("Cannot enter blank user id");
-                return;
-            }
-
+	    
+            if(isBlankEntry(chatName))
+		return;
             //checking if it is initial sender
             String query = String.format("SELECT * FROM CHAT WHERE init_sender = '%s' AND chat_id = '%s'", authorizedUser, chatId);
             int userNum = esql.executeQuery(query);
@@ -699,10 +697,8 @@ public class Messenger {
            try{
              System.out.println("Enter user name to remove from chat");
             String chatName = in.readLine();
-             if(chatName == ""){
-                System.out.println("Cannot enter blank user id");
-                return;
-            }
+             if(isBlankEntry(chatName))
+		return;
 
             //checking if it is initial sender
             String query = String.format("SELECT * FROM CHAT WHERE init_sender = '%s' AND chat_id = '%s'", authorizedUser, chatId);
@@ -758,10 +754,8 @@ public class Messenger {
             System.out.println("Enter a message");
             String message = in.readLine();
             
-            if(message == ""){
-                System.out.println("enter a message");
-                return;       
-            }
+            if(isBlankEntry(message))
+		return;
 
             String query = String.format("INSERT INTO MESSAGE(msg_text, msg_timestamp, sender_login, chat_id) VALUES('%s', NOW(), '%s', '%s')", message, authorizedUser, chatId);
             esql.executeUpdate(query);
@@ -778,11 +772,8 @@ public class Messenger {
             System.out.println("Enter messageId");
             String messageId = in.readLine();
             
-            if(messageId == ""){
-                System.out.println("enter a message id ");
-                return;       
-            }
-
+            if(isBlankEntry(messageId))
+		return;
             String query = String.format("DELETE FROM MESSAGE WHERE msg_id = '%s'", messageId);
             esql.executeUpdate(query);
             System.out.println("Message is deleted");
@@ -798,11 +789,8 @@ public class Messenger {
             System.out.println("Enter messageId");
             String messageId = in.readLine();
             
-            if(messageId == ""){
-                System.out.println("enter a message");
-                return;       
-            }
-
+            if(isBlankEntry(messageId))
+		return;
             System.out.println("Enter message");
             String message = in.readLine();
             if(message == ""){
