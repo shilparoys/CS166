@@ -271,7 +271,7 @@ public class Messenger {
 		System.out.println("2.  Blocked List Menu");
                 System.out.println("3.  Chat Menu");
                 System.out.println("4.  Delete Own Account");
-                System.out.println("9. Log out");
+                System.out.println("9.  Log out");
                 switch (readChoice()){
                    case 1: contactListMenu(esql, authorisedUser); break;
 		   case 2: blockListMenu(esql, authorisedUser); break;
@@ -395,6 +395,7 @@ public class Messenger {
 	   
        }
    }
+   
    public static void contactListMenu(Messenger esql, String authorizedUser){
        boolean contactMenu = true;
        while(contactMenu){
@@ -415,6 +416,7 @@ public class Messenger {
        }
        
     }
+   
    public static void AddToContact(Messenger esql, String authorizedUser){
         try{
             //ask user to give contact username
@@ -492,7 +494,6 @@ public class Messenger {
         }
    }//end 
 
-
    public static void AddToBlocked(Messenger esql, String authorizedUser){
         try{
             System.out.println("Enter userId to add to blocked list");
@@ -522,7 +523,6 @@ public class Messenger {
         }
         
    }//end Query6
-
 
    public static void DeleteFromBlocked(Messenger esql, String authorizedUser){
         try{
@@ -554,7 +554,6 @@ public class Messenger {
         }
    }//end 
 
-
    public static void ListBlocked(Messenger esql, String authorizedUser){
      try{
             String query = String.format("SELECT a.list_member FROM USER_LIST_CONTAINS a, USR b WHERE b.login = '%s' AND b.block_list = a.list_id", authorizedUser);
@@ -570,6 +569,24 @@ public class Messenger {
         }
    }//end Query6
 
+   public static void messageMenu(Messenger esql, String authorizedUser){
+       boolean messageMenu = true;
+       while(messageMenu){
+	    System.out.println("MESSAGE MENU");
+            System.out.println("---------");
+            System.out.println("1.  Add Message");
+            System.out.println("2.  Edit Message");
+            System.out.println("3.  Delete Message");
+	    System.out.println("4.  Logout");
+	    switch(readChoice()){
+		case 1: addMessage(esql, authorizedUser, "5");
+		case 2: editMessage(esql, authorizedUser, "5");
+		case 3: deleteMessage(esql, authorizedUser, "5");
+		case 4: messageMenu = false; break;
+		default: System.out.println("Unrecognized choice!"); break;
+	    }
+       }
+   }
    public static void chatMenu(Messenger esql, String authorizedUser){
         boolean chatmenu = true;
         while(chatmenu){
@@ -580,7 +597,7 @@ public class Messenger {
             System.out.println("3.  Add member to chat");
             System.out.println("4.  Remove member from chat");
             System.out.println("5.  Delete a chat");
-            System.out.println("6. Log out");
+            System.out.println("6.  Log out");
             switch (readChoice()){
                 case 1: createChat(esql, authorizedUser); break;
                 case 2: chatViewer(esql, authorizedUser); break;
@@ -753,7 +770,8 @@ public class Messenger {
             System.err.println(e.getMessage());
         }
     }
-    public static void deleteMessage(Messenger esql, String authorizedUser, String chatId){
+   
+   public static void deleteMessage(Messenger esql, String authorizedUser, String chatId){
 
         try{
             System.out.println("Enter messageId");
@@ -772,7 +790,8 @@ public class Messenger {
             System.err.println(e.getMessage());
         }
     }
-    public static void editMessage(Messenger esql, String authorizedUser, String chatId){
+   
+   public static void editMessage(Messenger esql, String authorizedUser, String chatId){
 
         try{
             System.out.println("Enter messageId");
@@ -798,7 +817,8 @@ public class Messenger {
             System.err.println(e.getMessage());
         }
     }
-    public static void DeleteOwnAccount(Messenger esql, String authorizedUser){
+   
+   public static void DeleteOwnAccount(Messenger esql, String authorizedUser){
       //code
    }
 
