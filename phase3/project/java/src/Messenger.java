@@ -598,17 +598,11 @@ public class Messenger {
             System.out.println("---------");
             System.out.println("1.  Create a chat");
             System.out.println("2.  Chat viewer");
-            System.out.println("3.  Add member to chat");
-            System.out.println("4.  Remove member from chat");
-            System.out.println("5.  Delete a chat");
-            System.out.println("6.  Log out");
+            System.out.println("3.  Log out");
             switch (readChoice()){
                 case 1: createChat(esql, authorizedUser); break;
                 case 2: chatViewer(esql, authorizedUser); break;
-                case 3: addChatMember(esql, authorizedUser, "5"); break;
-                case 4: removeChatMember(esql, authorizedUser, "5"); break;
-                case 5: deleteChat(esql, authorizedUser, "5"); break;
-                case 6: chatmenu = false; break;
+                case 3: chatmenu = false; break;
                 default : System.out.println("Unrecognized choice!"); break;
             }
         }
@@ -633,6 +627,7 @@ public class Messenger {
    
    public static void createChat(Messenger esql, String authorizedUser){
         try{
+            //get names of people who you want to chat with 
             System.out.println("Please add usernames to include in chat");
             System.out.println("End with a q");
             String type;
@@ -642,6 +637,7 @@ public class Messenger {
                 chatUsers.add(input);
                 input = in.readLine();
             }
+            //decide on what kind of chat it is
             if(chatUsers.size() == 0){
                 System.out.println("Need to enter a user name");
                 return;
@@ -652,20 +648,25 @@ public class Messenger {
             else{
                 type = "group";
             }
-            //int chatId = esql.getCurrSeqVal("chat_chat_id_seq");
-            String query  = "SELECT MAX(chat_id) FROM CHAT";
-            List<List<String>> result = esql.executeQueryAndReturnResult(query);
-            String chatId = result.get(0).get(0);
-            query = String.format("INSERT INTO CHAT(chat_type, init_sender) VALUES('%s', '%s')", type, authorizedUser);
+
+            //updating the chatId
+            String query = String.format("INSERT INTO CHAT(chat_type, init_sender) VALUES('%s', '%s')", type, authorizedUser);
             esql.executeUpdate(query);
 
+            query = "SELECT MAX(chat_id) FROM CHAT";
+            List<List<String>> result = esql.executeQueryAndReturnResult(query);
+            String chatId = result.get(0).get(0);
+
+            //adding everyone else into the chat
+            for(int i = 0; i < chatUsers.size(); i++){
+                query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, chatUsers.get(i));
+                esql.executeUpdate(query);
+            }
+
+            //adding authorized user to chat
             query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, authorizedUser);
             esql.executeUpdate(query);
 
-            for(int i = 0; i < chatUsers.size(); i++){
-                query = String.format("INSERT INTO CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, authorizedUser);
-                esql.executeUpdate(query);
-            }
             String print = "New chat has been created with " + authorizedUser + " ";
             for(int i = 0; i < chatUsers.size(); i++){
                 print += chatUsers.get(i) + " " ;
@@ -678,8 +679,67 @@ public class Messenger {
    } 
 
    public static void chatViewer(Messenger esql, String authorizedUser){
-   }
+        try{
+            //get the chatid associated with the authorizedUser
+            String query = String.format("SELECT chat_id FROM CHAT_LIST WHERE member = '%s'", authorizedUser);
+            List<List<String>> chats = esql.executeQueryAndReturnResult(query);
 
+            //print out the memebers in the associated chat
+            for(int i = 0 ; i < chats.size(); i++){
+                query = String.format("SELECT member FROM CHAT_LIST where chat_id = '%s'", chats.get(i).get(0));
+                List<List<String>> members = esql.executeQueryAndReturnResult(query);
+                String print = i + ": ";
+                System.out.println(print);
+                for(int j = 0; j < members.size(); j++){
+                    System.out.print(members.get(j).get(0).trim());
+                    System.out.print(" ");
+                }
+                System.out.println();
+            }
+            System.out.println("Enter chat number to browse");
+            String input = in.readLine();
+            int inpt = Integer.parseInt(input);
+            String chatNum = chats.get(inpt).get(0);
+            query = String.format("SELECT * FROM MESSAGE WHERE chat_id = '%s' ORDER BY msg_timestamp", chatNum);
+            List<List<String>> messsages = esql.executeQueryAndReturnResult(query);
+            chatMenu1(esql, authorizedUser, chatNum);
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+        
+   }
+   
+   public static void chatMenu1(Messenger esql, String authorizedUser, String chatNum){
+        boolean chatmenu = true;
+        while(chatmenu){
+            System.out.println(" MENU");
+            System.out.println("---------");
+            System.out.println("1.  Display Message");
+            System.out.println("2.  Add Message");
+            System.out.println("3.  Edit Message");
+            System.out.println("4.  Delete Message");
+            System.out.println("5.  Add user to chat");
+            System.out.println("6.  Remove user from chat");
+            System.out.println("7.  Delete chat");
+            System.out.println("8.  Logout");
+            switch (readChoice()){
+                case 1: displayMessage(esql, authorizedUser, chatNum); break;
+                case 2: addMessage(esql, authorizedUser, chatNum); break;
+                case 3: editMessage(esql, authorizedUser, chatNum); break;
+                case 4: deleteMessage(esql, authorizedUser, chatNum); break;
+                case 5: addChatMember(esql, authorizedUser, chatNum); break;
+                case 6: removeChatMember(esql, authorizedUser, chatNum); break;
+                case 7: deleteChat(esql, authorizedUser, chatNum);
+                case 8: chatmenu = false; break;
+                default : System.out.println("Unrecognized choice!"); break;
+            }
+        }
+        return;
+   }//end 
+
+   public static void displayMessage(Messenger esql, String authorizeduser, String chatId){
+   }
    public static void addChatMember(Messenger esql, String authorizedUser, String chatId){
 
         try{
