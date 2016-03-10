@@ -843,6 +843,7 @@ public class Messenger {
     **/
    public static void AddMessage (Messenger esql, String name, String num) {
       try {
+         System.out.println(num);
          System.out.println("Enter message(300 characters)");
          String message = in.readLine();
          if (message.length() > 300) {

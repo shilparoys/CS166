@@ -689,7 +689,7 @@ public class Messenger {
                 query = String.format("SELECT member FROM CHAT_LIST where chat_id = '%s'", chats.get(i).get(0));
                 List<List<String>> members = esql.executeQueryAndReturnResult(query);
                 String print = i + ": ";
-                System.out.println(print);
+                System.out.print(print);
                 for(int j = 0; j < members.size(); j++){
                     System.out.print(members.get(j).get(0).trim());
                     System.out.print(" ");
@@ -700,8 +700,6 @@ public class Messenger {
             String input = in.readLine();
             int inpt = Integer.parseInt(input);
             String chatNum = chats.get(inpt).get(0);
-            query = String.format("SELECT * FROM MESSAGE WHERE chat_id = '%s' ORDER BY msg_timestamp", chatNum);
-            List<List<String>> messsages = esql.executeQueryAndReturnResult(query);
             chatMenu1(esql, authorizedUser, chatNum);
         }
         catch(Exception e){
@@ -739,6 +737,70 @@ public class Messenger {
    }//end 
 
    public static void displayMessage(Messenger esql, String authorizeduser, String chatId){
+        try{
+            String query = String.format("SELECT * FROM MESSAGE WHERE chat_id = '%s' ORDER BY msg_timestamp", chatId);
+            List<List<String>> messages = esql.executeQueryAndReturnResult(query);
+            int numMessages = messages.size();
+            if(numMessages == 0){
+                System.out.println("No messages");
+                return;
+            }
+
+           int end;
+            int j = 0;
+            int i = numMessages -1 - j;
+            if(numMessages < 10){
+                end = 0;
+            }
+            else{
+                end = numMessages - 10 - j;
+            }
+
+            for(; i >= end && end >= 0 ; i--){
+                query = String.format("SELECT * FROM MESSAGE where msg_id = '%s'", messages.get(i).get(0));
+                List<List<String>> result = esql.executeQueryAndReturnResult(query);
+                
+                System.out.println(result.size());        
+                String print = "Message Id: ";
+                print += result.get(0).get(0);
+                System.out.println(print);
+
+                String print1 = "Sender: ";
+                print1 += result.get(0).get(3);
+                System.out.println(print1);
+
+                String print2 = "Time: ";
+                print2 += result.get(0).get(2);
+                System.out.println(print2);
+
+                String print3 = "Message: ";
+                print3 += result.get(0).get(1);
+                System.out.println(print3);
+
+                System.out.println("Test");
+                System.out.println(i);
+                System.out.println(end);
+                System.out.println(numMessages);
+                if(i == end && numMessages > 10){
+                    if(i == 0)
+                        break;
+                    System.out.println("More messages?");
+                    String response = in.readLine();
+
+                    if(response.equals("y")){
+                        j++;
+                        end = numMessages -10 - j;
+                    }
+                    else{
+                        break;
+                    }
+                }
+            }
+
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        } 
    }
    public static void addChatMember(Messenger esql, String authorizedUser, String chatId){
 
