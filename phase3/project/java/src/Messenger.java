@@ -638,7 +638,8 @@ public class Messenger {
                 input = in.readLine();
             }
             //decide on what kind of chat it is
-            if(chatUsers.size() == 0){
+            chatUsers.remove("q");
+            if(chatUsers.size() == 0 ){
                 System.out.println("Need to enter a user name");
                 return;
             }
@@ -681,7 +682,11 @@ public class Messenger {
             //get the chatid associated with the authorizedUser
             String query = String.format("SELECT chat_id FROM CHAT_LIST WHERE member = '%s'", authorizedUser);
             List<List<String>> chats = esql.executeQueryAndReturnResult(query);
-
+            
+            if(chats.size() == 0){
+                System.out.println("No chats");
+                return;
+            }
             //print out the memebers in the associated chat
             for(int i = 0 ; i < chats.size(); i++){
                 query = String.format("SELECT member FROM CHAT_LIST where chat_id = '%s'", chats.get(i).get(0));
@@ -775,10 +780,6 @@ public class Messenger {
                 print3 += result.get(0).get(1);
                 System.out.println(print3);
 
-                System.out.println("Test");
-                System.out.println(i);
-                System.out.println(end);
-                System.out.println(numMessages);
                 if(i == end && numMessages > 10){
                     if(i == 0)
                         break;
@@ -829,14 +830,14 @@ public class Messenger {
              System.out.println("Enter user name to remove from chat");
             String chatName = in.readLine();
              if(isBlankEntry(chatName))
-		return;
+	        	return;
 
             if(isValidSender(esql, authorizedUser, chatId))
-		return;
+	        	return;
 
             if(isValidEntry(esql, chatName))
-		return;
-            String query = String.format("DELETE FROM CHAT_LIST(chat_id, member) VALUES('%s', '%s')", chatId, chatName);
+	        	return;
+            String query = String.format("DELETE FROM CHAT_LIST WHERE chat_id = '%s' AND member = '%s'", chatId, chatName);
             esql.executeUpdate(query);
             String print = chatName + " is removed from the chat";
             System.out.println(print);
@@ -850,9 +851,9 @@ public class Messenger {
         try{   
              //checking if it is initial sender
             if(isValidSender(esql, authorizedUser, chatId))
-		return;
+		        return;
             
-            String query = String.format("DELETE FROM MESSAGES WHERE chat_id = '%s'", chatId);
+            String query = String.format("DELETE FROM MESSAGE WHERE chat_id = '%s'", chatId);
             esql.executeUpdate(query);
             query = String.format("DELETE FROM CHAT_LIST WHERE chat_id = '%s'", chatId);
             esql.executeUpdate(query);
