@@ -1,4 +1,4 @@
-/*
+/* SHILPA CHIRACKEL & ALYZA MALUNAO
  * Template JAVA User Interface
  * =============================
  *
@@ -764,6 +764,7 @@ public class Messenger {
                 }
                 System.out.println();
             }
+            //ask user to select which chat to browse via i value
             System.out.println("Enter chat number to browse: ");
             String input = in.readLine();
             int inpt = Integer.parseInt(input);
@@ -844,15 +845,15 @@ public class Messenger {
                 
                 System.out.println("....................");
                 String print = "Message Id: ";
-                print += one.get(0).get(0);
+                print += one.get(0).get(0).trim();
                 System.out.println(print);
 
                 String print1 = "Sender: ";
-                print1 += one.get(0).get(3);
+                print1 += one.get(0).get(3).trim();
                 System.out.println(print1);
 
                 String print2 = "Time: ";
-                print2 += one.get(0).get(2);
+                print2 += one.get(0).get(2).trim();
                 System.out.println(print2);
 
                 String print3 = "Message: ";
@@ -860,6 +861,7 @@ public class Messenger {
                 System.out.println(print3);
                 System.out.println("....................");
                 
+                //display 10 messages
                 if(i == end && numMessages > 10){
                     if(i == 0)
                         break;
